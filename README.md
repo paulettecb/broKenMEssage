@@ -29,6 +29,6 @@ Nada sale del teléfono: las grabaciones viven en una carpeta temporal y se reem
 
 ## Pendientes
 - [x] Nombre: broKenMEssage
-- [ ] Ícono
+- [x] Ícono (diseño de Paulette: vasitos con hilo)
 - [ ] Primer build en Xcode
 - [ ] Botón en el Centro de control / botón de acción para abrir directo en "Grabar"
