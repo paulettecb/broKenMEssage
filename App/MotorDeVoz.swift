@@ -82,7 +82,7 @@ final class MotorDeVoz: NSObject, ObservableObject, AVAudioPlayerDelegate {
         guard let salidaBuffer = AVAudioPCMBuffer(pcmFormat: formato, frameCapacity: max(largo, 1)),
               let salidaDatos = salidaBuffer.floatChannelData else { throw CocoaError(.fileWriteUnknown) }
         salidaBuffer.frameLength = largo
-        for (c, muestras) in volteados.enumerated() {
+        for (c, muestras) in volteados.enumerated() where !muestras.isEmpty {
             muestras.withUnsafeBufferPointer { salidaDatos[c].update(from: $0.baseAddress!, count: muestras.count) }
         }
 
