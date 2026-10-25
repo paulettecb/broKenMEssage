@@ -52,37 +52,20 @@ struct PantallaJuego: View {
         }
     }
 
+    /// Una sola palabra por paso, como el mockup simplificado: nada de instrucciones largas.
     private var encabezado: some View {
-        let textos: (String, String, String) = {
+        let titulo: String = {
             switch juego.paso {
-            case .inventa:
-                return ("Paso 1 de 4 · Quien inventa", "Di un nombre, una palabra, lo que sea",
-                        "Que nadie más vea qué es. Britney Spears, aguacate, tu ex.")
-            case .alReves:
-                return ("Paso 2 de 4 · Así suena al revés", "Escúchala volteada",
-                        "Todos la oyen. Quien adivina, a memorizar cómo suena.")
-            case .adivina:
-                return ("Paso 3 de 4 · Quien adivina", "Repite lo que oíste, tal cual",
-                        "Al revés también, aunque suene a idioma inventado. Entre más parecido, mejor sale al voltearlo.")
-            case .prueba:
-                return ("Paso 4 de 4 · La prueba", "Tu versión, volteada al derecho",
-                        "Escúchenla y adivinen qué dijo. Luego, la original.")
+            case .inventa: return "Empezar"
+            case .alReves: return "Escucha"
+            case .adivina: return "Repite"
+            case .prueba: return "¿Le atinaste?"
             }
         }()
-        return VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 8) {
-                Destello().fill(colores.acento).frame(width: 13, height: 13)
-                Etiqueta(texto: textos.0, color: colores.texto, size: 13)
-            }
-            Text(textos.1)
-                .font(Tipo.titulo(44))
-                .lineSpacing(-4)
-                .fixedSize(horizontal: false, vertical: true)
-            Text(textos.2)
-                .font(Tipo.texto(17))
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .padding(.top, 12)
+        return Text(titulo)
+            .font(Tipo.titulo(52))
+            .padding(.top, 16)
+            .accessibilityAddTraits(.isHeader)
     }
 
     // MARK: - En medio
@@ -126,9 +109,6 @@ struct PantallaJuego: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(voz.grabando ? "Detener grabación" : "Grabar")
-            Text(voz.grabando ? "Grabando… toca para parar." : "Toca para empezar, toca otra vez para parar.")
-                .font(Tipo.texto(15))
-                .multilineTextAlignment(.center)
             if juego.paso == .adivina && !voz.grabando {
                 botonContorno("Oírla al revés otra vez", accion: juego.escucharAlReves)
             }
@@ -138,6 +118,7 @@ struct PantallaJuego: View {
 
     private var pasoAlReves: some View {
         VStack(spacing: 22) {
+            Ondas(sonando: voz.reproduciendo, color: Paleta.orquidea, acento: Paleta.oro)
             Button(action: juego.escucharAlReves) {
                 VStack(spacing: 10) {
                     Image(systemName: voz.reproduciendo ? "speaker.wave.3.fill" : "arrow.counterclockwise")
@@ -182,7 +163,6 @@ struct PantallaJuego: View {
 
             if juego.originalRevelada {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("¿le atinó?").font(Tipo.firma(26)).foregroundStyle(Paleta.vino)
                     HStack(spacing: 10) {
                         Button { juego.veredicto(leAtino: true) } label: {
                             Text("SÍ, PUNTO").font(Tipo.etiqueta(15)).tracking(15 * 0.12)
@@ -227,5 +207,30 @@ struct PantallaJuego: View {
         }
         .frame(maxWidth: .infinity)
         .accessibilityLabel("Paso \(juego.paso.rawValue) de 4")
+    }
+}
+
+/// Las rayitas del mockup: se mueven mientras suena el audio y se quedan quietas si no.
+struct Ondas: View {
+    let sonando: Bool
+    let color: Color
+    let acento: Color
+    private let base: [CGFloat] = [18, 34, 56, 30, 70, 82, 48, 64, 26, 52, 76, 40, 22, 12]
+
+    var body: some View {
+        TimelineView(.animation(paused: !sonando)) { contexto in
+            let t = contexto.date.timeIntervalSinceReferenceDate
+            HStack(spacing: 5) {
+                ForEach(base.indices, id: \.self) { i in
+                    let vaiven = sonando ? 0.55 + 0.45 * abs(sin(t * 6 + Double(i) * 0.7)) : 1
+                    Capsule()
+                        .fill(i < 5 ? color : acento)
+                        .frame(width: 7, height: max(10, base[i] * vaiven))
+                }
+            }
+            .frame(height: 86)
+        }
+        .frame(maxWidth: .infinity)
+        .accessibilityHidden(true)
     }
 }
