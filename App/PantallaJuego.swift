@@ -163,6 +163,8 @@ struct PantallaJuego: View {
 
             if juego.originalRevelada {
                 VStack(alignment: .leading, spacing: 10) {
+                    // El detallito en cursiva (Mallcity) que le gusta a Paulette.
+                    Text("¿qué tal?").font(Tipo.firma(26)).foregroundStyle(Paleta.vino)
                     HStack(spacing: 10) {
                         Button { juego.veredicto(leAtino: true) } label: {
                             Text("SÍ, PUNTO").font(Tipo.etiqueta(15)).tracking(15 * 0.12)
