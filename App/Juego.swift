@@ -43,8 +43,10 @@ final class Juego: ObservableObject {
         do {
             switch paso {
             case .inventa:
-                original = grabado
-                originalAlReves = try voz.voltear(grabado, como: "original-al-reves")
+                let alReves = try voz.voltear(grabado, como: "original-al-reves")
+                originalAlReves = alReves
+                // Volteada dos veces = la original, pero ya recortada y con el volumen arriba.
+                original = try voz.voltear(alReves, como: "original-limpia")
                 paso = .alReves
                 escucharAlReves()
             case .adivina:
