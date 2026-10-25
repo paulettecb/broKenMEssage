@@ -20,12 +20,19 @@ final class MotorDeVoz: NSObject, ObservableObject, AVAudioPlayerDelegate {
         await AVAudioApplication.requestRecordPermission()
     }
 
-    private func prepararSesion() throws {
+    /// Grabar y reproducir usan modos distintos a propósito: con el modo de grabar
+    /// (`.playAndRecord`) iOS baja bastante el volumen de la bocina. Por eso solo se usa
+    /// mientras se graba, y para escuchar se cambia a `.playback`, que suena a todo volumen.
+    private func prepararSesion(grabar: Bool) throws {
         let sesion = AVAudioSession.sharedInstance()
-        // Sin `.allowBluetooth` a propósito: con él, iOS cambia al micrófono del coche en modo
-        // "llamada" y el sonido se oye feo. Así sale bonito por Bluetooth (A2DP) y graba el teléfono.
-        try sesion.setCategory(.playAndRecord, mode: .default,
-                               options: [.defaultToSpeaker, .allowBluetoothA2DP, .allowAirPlay])
+        if grabar {
+            // Sin `.allowBluetooth` a propósito: con él, iOS cambia al micrófono del coche en modo
+            // "llamada" y el sonido se oye feo. Así graba el micrófono del teléfono.
+            try sesion.setCategory(.playAndRecord, mode: .default,
+                                   options: [.defaultToSpeaker, .allowBluetoothA2DP, .allowAirPlay])
+        } else {
+            try sesion.setCategory(.playback, mode: .default)
+        }
         try sesion.setActive(true)
     }
 
@@ -33,7 +40,7 @@ final class MotorDeVoz: NSObject, ObservableObject, AVAudioPlayerDelegate {
 
     func empezarAGrabar(como nombre: String) throws {
         detener()
-        try prepararSesion()
+        try prepararSesion(grabar: true)
         let url = FileManager.default.temporaryDirectory.appendingPathComponent("\(nombre).caf")
         try? FileManager.default.removeItem(at: url)
         let ajustes: [String: Any] = [
@@ -76,7 +83,8 @@ final class MotorDeVoz: NSObject, ObservableObject, AVAudioPlayerDelegate {
             Array(UnsafeBufferPointer(start: datos[c], count: Int(buffer.frameLength)))
         }
         // 0.08 s de aire para que no empiece de golpe.
-        let volteados = Reversa.recortarEInvertir(canales, margen: Int(formato.sampleRate * 0.08))
+        // Además se sube el volumen de la grabación: la voz a medio metro del teléfono queda bajita.
+        let volteados = Reversa.normalizar(Reversa.recortarEInvertir(canales, margen: Int(formato.sampleRate * 0.08)))
 
         let largo = AVAudioFrameCount(volteados.first?.count ?? 0)
         guard let salidaBuffer = AVAudioPCMBuffer(pcmFormat: formato, frameCapacity: max(largo, 1)),
@@ -99,9 +107,10 @@ final class MotorDeVoz: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func reproducir(_ url: URL, alTerminar: (() -> Void)? = nil) {
         detener()
         do {
-            try prepararSesion()
+            try prepararSesion(grabar: false)
             reproductor = try AVAudioPlayer(contentsOf: url)
             reproductor?.delegate = self
+            reproductor?.volume = 1
             self.alTerminar = alTerminar
             reproductor?.play()
             reproduciendo = true

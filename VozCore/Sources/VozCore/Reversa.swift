@@ -24,4 +24,13 @@ public enum Reversa {
         }
         return invertir(canales.map { Array($0[tramo]) })
     }
+
+    /// Sube (o baja) el volumen para que el pico más alto llegue a `pico`, sin pasarse de
+    /// `gananciaMaxima` para no convertir el ruido de fondo de una grabación muda en un rugido.
+    public static func normalizar(_ canales: [[Float]], pico: Float = 0.9, gananciaMaxima: Float = 12) -> [[Float]] {
+        let maximo = canales.flatMap { $0 }.map(abs).max() ?? 0
+        guard maximo > 0 else { return canales }
+        let ganancia = min(pico / maximo, gananciaMaxima)
+        return canales.map { $0.map { $0 * ganancia } }
+    }
 }

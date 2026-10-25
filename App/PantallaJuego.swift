@@ -119,9 +119,10 @@ struct PantallaJuego: View {
                 }
                 .foregroundStyle(texto)
                 .frame(width: 220, height: 220)
-                .background(fondo, in: Circle())
+                // La sombra va SOLO en el círculo: puesta en todo el botón, también le hacía
+                // sombra a las letras y se veían dobles.
+                .background(Circle().fill(fondo).shadow(color: Paleta.tinta, radius: 0, x: 0, y: 4))
                 .overlay(Circle().stroke(Paleta.hueso, lineWidth: voz.grabando ? 8 : 0))
-                .shadow(color: Paleta.tinta, radius: 0, x: 0, y: 4)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(voz.grabando ? "Detener grabación" : "Grabar")
@@ -147,8 +148,7 @@ struct PantallaJuego: View {
                 }
                 .foregroundStyle(Paleta.tinta)
                 .frame(width: 180, height: 180)
-                .background(Paleta.oro, in: Circle())
-                .shadow(color: Paleta.tinta, radius: 0, x: 0, y: 4)
+                .background(Circle().fill(Paleta.oro).shadow(color: Paleta.tinta, radius: 0, x: 0, y: 4))
             }
             .buttonStyle(.plain)
             botonContorno("Ya, pásale el teléfono →", accion: juego.pasarTelefono)
@@ -165,8 +165,8 @@ struct PantallaJuego: View {
                 }
                 .foregroundStyle(Paleta.hueso)
                 .frame(maxWidth: .infinity, minHeight: 120)
-                .background(Paleta.carmin, in: RoundedRectangle(cornerRadius: 28))
-                .shadow(color: Paleta.tinta, radius: 0, x: 0, y: 4)
+                .background(RoundedRectangle(cornerRadius: 28).fill(Paleta.carmin)
+                    .shadow(color: Paleta.tinta, radius: 0, x: 0, y: 4))
             }
             .buttonStyle(.plain)
 
