@@ -1,0 +1,50 @@
+# Genera el proyecto de Xcode con XcodeGen:
+#   brew install xcodegen
+#   xcodegen
+# El .xcodeproj no se sube al repo: este archivo es la fuente de verdad.
+name: JuegoDeVoz
+options:
+  bundleIdPrefix: com.paulettecb
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: SW8D4N3U47
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+packages:
+  VozCore:
+    path: VozCore
+targets:
+  JuegoDeVoz:
+    type: application
+    platform: iOS
+    sources:
+      - App
+      - Shared
+    dependencies:
+      - package: VozCore
+    scheme: {}
+    info:
+      path: App/Info.plist
+      properties:
+        # Nombre provisional bajo el ícono: lo cambia Paulette cuando escoja el nombre.
+        CFBundleDisplayName: Al revés
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UIRequiresFullScreen: true
+        NSMicrophoneUsageDescription: Para grabar lo que dicen y voltearlo al revés. Nada sale del teléfono.
+        UIAppFonts:
+          - Lumiare.otf
+          - Friendship-Medium.ttf
+          - Mallcity.otf
+          - BricolageGrotesque-Regular.ttf
+          - BricolageGrotesque-SemiBold.ttf
+          - BricolageGrotesque-ExtraBold.ttf
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.paulettecb.juegodevoz
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
