@@ -6,6 +6,7 @@ App personal de Paulette, **broKenMEssage** (nombre suyo, respetar la capitaliza
 - Español mexicano, cálido y directo, TDAH-friendly: pasos cortos, uno a la vez.
 - No ponerle nombre a las cosas por ella.
 - Respetar el mockup "Juego de voz al revés · mockup": 4 pasos, cada uno con su color (carmín, vino, oro, orquídea), un botón gigante.
+- **Pocas palabras**: una sola por paso (Empezar · Escucha · Repite · ¿Le atinaste?). Nada de instrucciones largas; si algo se puede decir con un ícono, va el ícono.
 
 ## Reglas de trabajo
 - Cada vez que subas algo, abre un PR NUEVO y pásale ese link; nunca uno ya mergeado.
