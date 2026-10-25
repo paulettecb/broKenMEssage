@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct JuegoDeVozApp: App {
+struct BrokenMessageApp: App {
     @StateObject private var juego = Juego()
 
     var body: some Scene {

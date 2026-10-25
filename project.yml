@@ -2,7 +2,7 @@
 #   brew install xcodegen
 #   xcodegen
 # El .xcodeproj no se sube al repo: este archivo es la fuente de verdad.
-name: JuegoDeVoz
+name: BrokenMessage
 options:
   bundleIdPrefix: com.paulettecb
   deploymentTarget:
@@ -19,7 +19,7 @@ packages:
   VozCore:
     path: VozCore
 targets:
-  JuegoDeVoz:
+  BrokenMessage:
     type: application
     platform: iOS
     sources:
@@ -31,8 +31,7 @@ targets:
     info:
       path: App/Info.plist
       properties:
-        # Nombre provisional bajo el ícono: lo cambia Paulette cuando escoja el nombre.
-        CFBundleDisplayName: Al revés
+        CFBundleDisplayName: broKenMEssage
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIRequiresFullScreen: true
@@ -46,5 +45,5 @@ targets:
           - BricolageGrotesque-ExtraBold.ttf
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.paulettecb.juegodevoz
+        PRODUCT_BUNDLE_IDENTIFIER: com.paulettecb.brokenmessage
         ASSETCATALOG_COMPILER_APPICON_NAME: ""
